@@ -11,7 +11,7 @@ namespace jcDC.Tests.WebAPI.Controllers {
 
         [jcCACHE(REQUESTS.VALUES_GET)]
         public IEnumerable<string> Get() {
-            return Return(new string[] { DateTime.Now.ToString(), "value2" }, cacheObject: true);
+            return Return(new string[] { DateTime.Now.ToString(), "value2" }, REQUESTS.VALUES_GET, cacheObject: true);
         }
     }
 }

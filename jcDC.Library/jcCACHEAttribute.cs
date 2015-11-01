@@ -1,8 +1,10 @@
-﻿using jcDC.Library.Objects;
+﻿using jcDC.Library.CachingPlatforms;
+using jcDC.Library.Enums;
 
+using System;
+using System.Configuration;
 using System.Net.Http;
 using System.Net.Http.Formatting;
-using System.Runtime.Caching;
 using System.Web.Http.Controllers;
 
 namespace jcDC.Library {
@@ -15,17 +17,47 @@ namespace jcDC.Library {
             _key = key.ToString();
         }
 
+        private static BaseCachePlatform _currentCachePlatform;
+
+        public static BaseCachePlatform CurrentCachePlatform {
+            get {
+                if (_currentCachePlatform != null) {
+                    return _currentCachePlatform;
+                }
+
+                var selectedCachePlatform = Common.Constants.DefaultCachePlatform;
+
+                var selectedCachePlatformStr = ConfigurationManager.AppSettings["CachePlatform"];
+
+                if (selectedCachePlatformStr != null) {
+                    selectedCachePlatform = (CACHINGPLATFORMS)Enum.Parse(typeof(CACHINGPLATFORMS), selectedCachePlatformStr);
+                }
+
+                // todo replace with reflection
+                switch(selectedCachePlatform) {
+                    case CACHINGPLATFORMS.ASP:
+                        _currentCachePlatform = new ASPCachePlatform();
+                        break;
+                    case CACHINGPLATFORMS.SQL:
+                        _currentCachePlatform = new SQLCachePlatform();
+                        break;
+                }
+
+                return _currentCachePlatform;
+            }
+        }
+
         public override void OnActionExecuting(HttpActionContext actionContext) {
-            ObjectCache cache = MemoryCache.Default;
-            
-            var request = actionContext.RequestContext.Url.Request.RequestUri.LocalPath;
-            
-            var cacheItem = cache[request];
+            if (string.IsNullOrEmpty(_key)) {
+                _key = actionContext.RequestContext.Url.Request.RequestUri.LocalPath;
+            }
+
+            var cacheItem = CurrentCachePlatform.GetFromCache(_key);
 
             if (cacheItem != null) {
                 var response = new HttpResponseMessage();
 
-                response.Content = new ObjectContent(((jcCACHEItem)cacheItem).ItemType, ((jcCACHEItem)cacheItem).ItemValue, new JsonMediaTypeFormatter());
+                response.Content = new ObjectContent(cacheItem.ItemType, cacheItem.ItemValue, new JsonMediaTypeFormatter());
 
                 actionContext.Response = response;
             }
