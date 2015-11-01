@@ -16,5 +16,9 @@ namespace jcDC.Library.CachingPlatforms {
         public override jcCACHEItem GetFromCache(string key) {
             throw new NotImplementedException();
         }
+
+        public override void RemoveDependencies(string[] dependencies) {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -2,16 +2,36 @@
 using System.Collections.Generic;
 
 using jcDC.Library;
+using static System.Net.WebRequestMethods;
+using System.Web.Http;
 
 namespace jcDC.Tests.WebAPI.Controllers {
     public class ValuesController : jcCACHEController {
         public enum REQUESTS {
-            VALUES_GET
+            NO_CACHE,
+            VALUES_GET,
+            VALUES_ADD
         }
 
+        public static List<int> val;
+
         [jcCACHE(REQUESTS.VALUES_GET)]
-        public IEnumerable<string> Get() {
-            return Return(new string[] { DateTime.Now.ToString(), "value2" }, REQUESTS.VALUES_GET, cacheObject: true);
+        public IEnumerable<int> Get() {
+            return Return(val, REQUESTS.VALUES_GET, cacheObject: true);
+        }
+
+        public ValuesController() {
+            if (val == null) {
+                val = new List<int>();
+            }
+        }
+
+        [HttpGet]
+        [jcCACHE(REQUESTS.NO_CACHE, new string[] { "VALUES_GET" })]
+        public bool Add(int a) {
+            val.Add(a);
+
+            return Return(true, REQUESTS.VALUES_ADD);
         }
     }
 }

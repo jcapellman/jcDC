@@ -29,5 +29,17 @@ namespace jcDC.Library.CachingPlatforms {
 
             return (jcCACHEItem)cacheItem;
         }
+
+        public override void RemoveDependencies(string[] dependencies) {
+            ObjectCache cache = MemoryCache.Default;
+
+            if (dependencies == null) {
+                return;
+            }
+
+            foreach (var item in dependencies) {
+                cache.Remove(item);
+            }
+        }
     }
 }

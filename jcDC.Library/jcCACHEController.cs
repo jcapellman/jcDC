@@ -11,7 +11,7 @@ namespace jcDC.Library {
             return value;
         }
 
-        public T Return<T>(T value, bool cacheObject = true, [CallerMemberName] string callingMember = "", [CallerFilePath] string callingPath = "") {
+        protected T Return<T>(T value, bool cacheObject = true, [CallerMemberName] string callingMember = "", [CallerFilePath] string callingPath = "") {
             var key = string.Empty;
 
             if (cacheObject) {
@@ -21,7 +21,7 @@ namespace jcDC.Library {
             return Return(value, key, cacheObject);
         }
 
-        public T Return<T, TK>(T value, TK key, bool cacheObject = true) {
+        protected T Return<T, TK>(T value, TK key, bool cacheObject = true) {
             return Return(value, key.ToString(), cacheObject);
         }
     }

@@ -10,11 +10,13 @@ using System.Web.Http.Controllers;
 namespace jcDC.Library {
     public class jcCACHEAttribute : System.Web.Http.Filters.ActionFilterAttribute {
         private string _key;
+        private string[] _dependencies;
 
-        public jcCACHEAttribute() { _key = null; }
+        public jcCACHEAttribute() { _key = null; _dependencies = null; }
 
-        public jcCACHEAttribute(object key) {
+        public jcCACHEAttribute(object key, string[] dependencies = null) {
             _key = key.ToString();
+            _dependencies = dependencies;
         }
 
         private static BaseCachePlatform _currentCachePlatform;
@@ -48,6 +50,14 @@ namespace jcDC.Library {
         }
 
         public override void OnActionExecuting(HttpActionContext actionContext) {
+            if (_key == Common.Constants.NO_CACHE_STR) {
+                CurrentCachePlatform.RemoveDependencies(_dependencies);
+
+                base.OnActionExecuting(actionContext);
+
+                return;
+            }
+
             if (string.IsNullOrEmpty(_key)) {
                 _key = actionContext.RequestContext.Url.Request.RequestUri.LocalPath;
             }

@@ -8,5 +8,7 @@ namespace jcDC.Library.CachingPlatforms {
         public abstract void AddToCache<T>(string key, T value);
 
         public abstract jcCACHEItem GetFromCache(string key);
+
+        public abstract void RemoveDependencies(string[] dependencies);
     }
 }
