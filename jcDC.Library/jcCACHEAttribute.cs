@@ -7,6 +7,14 @@ using System.Web.Http.Controllers;
 
 namespace jcDC.Library {
     public class jcCACHEAttribute : System.Web.Http.Filters.ActionFilterAttribute {
+        private string _key;
+
+        public jcCACHEAttribute() { _key = null; }
+
+        public jcCACHEAttribute(object key) {
+            _key = key.ToString();
+        }
+
         public override void OnActionExecuting(HttpActionContext actionContext) {
             ObjectCache cache = MemoryCache.Default;
             

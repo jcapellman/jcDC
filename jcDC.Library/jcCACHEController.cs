@@ -7,18 +7,30 @@ using System.Web.Http;
 
 namespace jcDC.Library {
     public class jcCACHEController : ApiController {
-        public T Return<T>(T value, bool cacheObject = true, [CallerMemberName] string callingMember = "", [CallerFilePath] string callingPath = "") {
+        private T Return<T>(T value, string key, bool cacheObject) {
             if (cacheObject) {
                 ObjectCache cache = MemoryCache.Default;
 
                 var cacheItem = new jcCACHEItem(value);
 
-                var key = "/api/" + callingPath.Substring(callingPath.LastIndexOf("\\") + 1).Replace("Controller.cs", "");
-
                 cache.Add(key, cacheItem, DateTimeOffset.MaxValue);
             }
 
             return value;
+        }
+
+        public T Return<T>(T value, bool cacheObject = true, [CallerMemberName] string callingMember = "", [CallerFilePath] string callingPath = "") {
+            var key = string.Empty;
+
+            if (cacheObject) {
+                key = "/api/" + callingPath.Substring(callingPath.LastIndexOf("\\") + 1).Replace("Controller.cs", "");
+            }
+
+            return Return(value, key, cacheObject);
+        }
+
+        public T Return<T, TK>(T value, TK key, bool cacheObject = true) {
+            return Return(value, key.ToString(), cacheObject);
         }
     }
 }
