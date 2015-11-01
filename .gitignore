@@ -87,3 +87,4 @@
 /jcDC.Tests.WebAPI/bin/roslyn/VBCSCompiler.exe.config
 /jcDC.Tests.WebAPI/bin/roslyn/csc.exe
 /jcDC.Tests.WebAPI/bin/roslyn/vbc.exe
+/jcDC.Library/packages
