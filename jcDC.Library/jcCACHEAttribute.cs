@@ -3,8 +3,10 @@ using jcDC.Library.Enums;
 
 using System;
 using System.Configuration;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Formatting;
+using System.Reflection;
 using System.Web.Http.Controllers;
 
 namespace jcDC.Library {
@@ -35,16 +37,16 @@ namespace jcDC.Library {
                     selectedCachePlatform = (CACHINGPLATFORMS)Enum.Parse(typeof(CACHINGPLATFORMS), selectedCachePlatformStr);
                 }
 
-                // todo replace with reflection
-                switch(selectedCachePlatform) {
-                    case CACHINGPLATFORMS.ASP:
-                        _currentCachePlatform = new ASPCachePlatform();
-                        break;
-                    case CACHINGPLATFORMS.SQL:
-                        _currentCachePlatform = new SQLCachePlatform();
-                        break;
-                }
+                foreach (Type type in Assembly.GetAssembly(typeof(BaseCachePlatform)).GetTypes().Where(myType => myType.IsClass && !myType.IsAbstract && myType.IsSubclassOf(typeof(BaseCachePlatform)))) {
+                    var classItem = (BaseCachePlatform)Activator.CreateInstance(type, null);
 
+                    if (classItem.GetCachingPlatformType() != selectedCachePlatform) {
+                        continue;
+                    }
+
+                    _currentCachePlatform = classItem;
+                }
+                
                 return _currentCachePlatform;
             }
         }
