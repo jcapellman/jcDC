@@ -6,12 +6,15 @@ using jcDC.Library.Objects;
 
 namespace jcDC.Library.CachingPlatforms {
     public class ASPCachePlatform : BaseCachePlatform {
-        public override void AddToCache<T>(string key, T value) {
-            ObjectCache cache = MemoryCache.Default;
+        private ObjectCache _cache;
 
+        public ASPCachePlatform() {
+            _cache = MemoryCache.Default;
+        }
+        public override void AddToCache<T>(string key, T value) {
             var cacheItem = new jcCACHEItem(value);
 
-            cache.Add(key, cacheItem, DateTimeOffset.MaxValue);
+            _cache.Add(key, cacheItem, DateTimeOffset.MaxValue);
         }
 
         public override CACHINGPLATFORMS GetCachingPlatformType() {
@@ -19,9 +22,7 @@ namespace jcDC.Library.CachingPlatforms {
         }
 
         public override jcCACHEItem GetFromCache(string key) {
-            ObjectCache cache = MemoryCache.Default;
-
-            var cacheItem = cache[key];
+            var cacheItem = _cache[key];
 
             if (cacheItem == null) {
                 return null;
@@ -31,14 +32,12 @@ namespace jcDC.Library.CachingPlatforms {
         }
 
         public override void RemoveDependencies(string[] dependencies) {
-            ObjectCache cache = MemoryCache.Default;
-
             if (dependencies == null) {
                 return;
             }
 
             foreach (var item in dependencies) {
-                cache.Remove(item);
+                _cache.Remove(item);
             }
         }
     }

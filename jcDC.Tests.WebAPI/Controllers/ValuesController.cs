@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Web.Http;
 
 using jcDC.Library;
-using static System.Net.WebRequestMethods;
-using System.Web.Http;
 
 namespace jcDC.Tests.WebAPI.Controllers {
     public class ValuesController : jcCACHEController {
