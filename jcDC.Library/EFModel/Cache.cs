@@ -4,7 +4,7 @@ namespace jcDC.Library.EFModel {
     
     [Table("Cache")]
     public partial class Cache {
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ID { get; set; }
 
         [Required]

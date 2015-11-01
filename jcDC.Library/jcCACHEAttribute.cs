@@ -31,7 +31,7 @@ namespace jcDC.Library {
 
                 var selectedCachePlatform = Common.Constants.DefaultCachePlatform;
 
-                var selectedCachePlatformStr = ConfigurationManager.AppSettings["CachePlatform"];
+                var selectedCachePlatformStr = ConfigurationManager.AppSettings["jcDC_CachePlatform"];
 
                 if (selectedCachePlatformStr != null) {
                     selectedCachePlatform = (CACHINGPLATFORMS)Enum.Parse(typeof(CACHINGPLATFORMS), selectedCachePlatformStr);
