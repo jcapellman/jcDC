@@ -1,4 +1,6 @@
-﻿using System;
+﻿using jcDC.Library.Objects;
+
+using System;
 using System.Runtime.Caching;
 using System.Web.Http;
 
@@ -8,7 +10,9 @@ namespace jcDC.Library {
             if (cacheObject) {
                 ObjectCache cache = MemoryCache.Default;
 
-                cache.Add(key, value, DateTimeOffset.MaxValue);
+                var cacheItem = new jcCACHEItem(value);
+
+                cache.Add(key, cacheItem, DateTimeOffset.MaxValue);
             }
 
             return value;

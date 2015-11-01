@@ -1,4 +1,7 @@
-﻿using System.Net.Http;
+﻿using jcDC.Library.Objects;
+
+using System.Net.Http;
+using System.Net.Http.Formatting;
 using System.Runtime.Caching;
 using System.Web.Http.Controllers;
 
@@ -9,8 +12,14 @@ namespace jcDC.Library {
             
             var request = actionContext.RequestContext.Url.Request.RequestUri.LocalPath;
             
-            if (cache[request] != null) {
-                actionContext.Response.Content = new StringContent(cache[request]);
+            var cacheItem = cache[request];
+
+            if (cacheItem != null) {
+                var response = new HttpResponseMessage();
+
+                response.Content = new ObjectContent(((jcCACHEItem)cacheItem).ItemType, ((jcCACHEItem)cacheItem).ItemValue, new JsonMediaTypeFormatter());
+
+                actionContext.Response = response;
             }
 
             base.OnActionExecuting(actionContext);

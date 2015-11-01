@@ -91,6 +91,7 @@
   <ItemGroup>
     <Compile Include="jcCACHEAttribute.cs" />
     <Compile Include="jcCACHEController.cs" />
+    <Compile Include="Objects\jcCACHEItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
