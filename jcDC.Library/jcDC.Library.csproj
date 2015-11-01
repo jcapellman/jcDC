@@ -59,6 +59,8 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Runtime.Caching" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
       <Private>True</Private>
@@ -103,6 +105,8 @@
     <Compile Include="CachingPlatforms\BaseCachePlatform.cs" />
     <Compile Include="CachingPlatforms\SQLCachePlatform.cs" />
     <Compile Include="Common\Constants.cs" />
+    <Compile Include="EFModel\Cache.cs" />
+    <Compile Include="EFModel\jcDCEFModel.cs" />
     <Compile Include="Enums\CachingPlatforms.cs" />
     <Compile Include="jcCACHEAttribute.cs" />
     <Compile Include="jcCACHEController.cs" />
