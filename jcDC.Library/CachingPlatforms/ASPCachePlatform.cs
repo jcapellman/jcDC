@@ -11,10 +11,17 @@ namespace jcDC.Library.CachingPlatforms {
         public ASPCachePlatform() {
             _cache = MemoryCache.Default;
         }
+
         public override void AddToCache<T>(string key, T value) {
             var cacheItem = new jcCACHEItem(value);
 
-            _cache.Add(key, cacheItem, DateTimeOffset.MaxValue);
+            var existingItem = _cache[key];
+
+            if (existingItem == null) {
+                _cache.Add(key, cacheItem, DateTimeOffset.MaxValue);
+            } else {
+                _cache[key] = cacheItem;
+            }
         }
 
         public override CACHINGPLATFORMS GetCachingPlatformType() {

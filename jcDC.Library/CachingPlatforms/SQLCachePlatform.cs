@@ -5,24 +5,31 @@ using jcDC.Library.EFModel;
 using System.Linq;
 
 using Newtonsoft.Json;
-using System;
 
 namespace jcDC.Library.CachingPlatforms {
     public class SQLCachePlatform : BaseCachePlatform {
         public override void AddToCache<T>(string key, T value) {
-            try {
-                using (var eFactory = new jcDCEFModel()) {
-                    var item = eFactory.Caches.Create();
+            using (var eFactory = new jcDCEFModel()) {
+                var isNew = true;
 
-                    item.Key = key;
-                    item.KeyValue = JsonConvert.SerializeObject(value);
+                var cacheItem = eFactory.Caches.FirstOrDefault(a => a.Key == key);
 
-                    eFactory.Caches.Add(item);
-                    eFactory.SaveChanges();
+                if (cacheItem == null) {
+                    cacheItem = eFactory.Caches.Create();
+
+                    cacheItem.Key = key;
+                } else {
+                    isNew = false;
                 }
-            } catch (Exception ex) {
-                var err = ex.ToString();
-            }
+
+                cacheItem.KeyValue = JsonConvert.SerializeObject(value);
+
+                if (isNew) {
+                    eFactory.Caches.Add(cacheItem);
+                }
+
+                eFactory.SaveChanges();
+            }        
         }
 
         public override CACHINGPLATFORMS GetCachingPlatformType() {
