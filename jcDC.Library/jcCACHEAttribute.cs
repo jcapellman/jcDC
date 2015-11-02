@@ -31,13 +31,13 @@ namespace jcDC.Library {
 
                 var selectedCachePlatform = Common.Constants.DefaultCachePlatform;
 
-                var selectedCachePlatformStr = ConfigurationManager.AppSettings["jcDC_CachePlatform"];
+                var selectedCachePlatformStr = ConfigurationManager.AppSettings[Common.Constants.CONFIG_CACHE_PLATFORM_TYPE];
 
                 if (selectedCachePlatformStr != null) {
                     selectedCachePlatform = (CACHINGPLATFORMS)Enum.Parse(typeof(CACHINGPLATFORMS), selectedCachePlatformStr);
                 }
 
-                foreach (Type type in Assembly.GetAssembly(typeof(BaseCachePlatform)).GetTypes().Where(myType => myType.IsClass && !myType.IsAbstract && myType.IsSubclassOf(typeof(BaseCachePlatform)))) {
+                foreach (Type type in Assembly.GetAssembly(typeof(BaseCachePlatform)).GetTypes().Where(a => a.IsClass && !a.IsAbstract && a.IsSubclassOf(typeof(BaseCachePlatform)))) {
                     var classItem = (BaseCachePlatform)Activator.CreateInstance(type, null);
 
                     if (classItem.GetCachingPlatformType() != selectedCachePlatform) {
@@ -52,9 +52,11 @@ namespace jcDC.Library {
         }
 
         public override void OnActionExecuting(HttpActionContext actionContext) {
-            if (_key == Common.Constants.NO_CACHE_STR) {
+            if (_dependencies != null) {
                 CurrentCachePlatform.RemoveDependencies(_dependencies);
+            }
 
+            if (_key == Common.Constants.NO_CACHE_STR) {
                 base.OnActionExecuting(actionContext);
 
                 return;
