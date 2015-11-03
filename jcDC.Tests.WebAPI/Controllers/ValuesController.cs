@@ -8,7 +8,8 @@ namespace jcDC.Tests.WebAPI.Controllers {
         public enum REQUESTS {
             NO_CACHE,
             VALUES_GET,
-            VALUES_ADD
+            VALUES_ADD,
+            VALUES_DELETE
         }
 
         public static List<int> val;
@@ -30,6 +31,14 @@ namespace jcDC.Tests.WebAPI.Controllers {
             val.Add(a);
 
             return Return(true, REQUESTS.VALUES_ADD);
+        }
+
+        [HttpDelete]
+        [jcCACHE(REQUESTS.NO_CACHE, new string[] { "VALUES_GET" })]
+        public bool DELETE(int idx) {
+            val.RemoveAt(idx);
+
+            return Return(true, REQUESTS.VALUES_DELETE);
         }
     }
 }
