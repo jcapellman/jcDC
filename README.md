@@ -3,7 +3,9 @@
 
 <h2>Upcoming Features</h2>
 -Timed Based Caching
+
 -Auto-purge of SQL based cache
+
 -In-memory Table Support
 
 <h2>How to Use</h2>
