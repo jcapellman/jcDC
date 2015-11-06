@@ -61,9 +61,17 @@ namespace jcDC.Library {
 
                 return;
             }
-
+            
             if (string.IsNullOrEmpty(_key)) {
                 _key = actionContext.RequestContext.Url.Request.RequestUri.LocalPath;
+            }
+
+            if (actionContext.ActionArguments.Any()) {
+                _key = _key + "_";
+
+                foreach (var item in actionContext.ActionArguments.Keys) {
+                    _key += item + "=" + actionContext.ActionArguments[item];
+                }
             }
 
             var cacheItem = CurrentCachePlatform.GetFromCache(_key);

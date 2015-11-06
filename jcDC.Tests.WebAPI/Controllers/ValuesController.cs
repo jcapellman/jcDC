@@ -8,6 +8,7 @@ namespace jcDC.Tests.WebAPI.Controllers {
         public enum REQUESTS {
             NO_CACHE,
             VALUES_GET,
+            VALUES_GET_ONE,
             VALUES_ADD,
             VALUES_DELETE
         }
@@ -19,13 +20,18 @@ namespace jcDC.Tests.WebAPI.Controllers {
             return Return(val, REQUESTS.VALUES_GET, cacheObject: true);
         }
 
+        [jcCACHE(REQUESTS.VALUES_GET_ONE)]
+        public int Get(int a) {
+            return Return(val.IndexOf(a), REQUESTS.VALUES_GET_ONE, cacheObject: true);
+        }
+
         public ValuesController() {
             if (val == null) {
                 val = new List<int>();
             }
         }
 
-        [HttpGet]
+        [HttpPost]
         [jcCACHE(REQUESTS.NO_CACHE, new string[] { "VALUES_GET" })]
         public bool Add(int a) {
             val.Add(a);
