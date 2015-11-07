@@ -54,6 +54,17 @@ public bool Add(int a) {
 }
 ```
 
+By default, the cache is set to nearly infinite (Int.MaxValue minutes in the future), you can however set this as you see fit like so:
+
+```csharp
+[jcCACHE(REQUESTS.VALUES_GET, expirationInMinutes: 60)]
+public IEnumerable<int> Get() {
+    return Return(val, REQUESTS.VALUES_GET, cacheObject: true);
+}
+```
+
+In this example, the cache will be valid for 60 minutes.
+
 That's all there is to using the library.
 
 <h2>Configuration</h2>
