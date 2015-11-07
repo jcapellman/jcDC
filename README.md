@@ -2,7 +2,6 @@
 .NET Distributed Caching for MVC and WebAPI.
 
 <h2>Upcoming Features</h2>
--Timed Based Caching
 
 -Auto-purge of SQL based cache
 
@@ -54,6 +53,17 @@ public bool Add(int a) {
     return Return(true, REQUESTS.VALUES_ADD);
 }
 ```
+
+By default, the cache is set to nearly infinite (Int.MaxValue minutes in the future), you can however set this as you see fit like so:
+
+```csharp
+[jcCACHE(REQUESTS.VALUES_GET, expirationInMinutes: 60)]
+public IEnumerable<int> Get() {
+    return Return(val, REQUESTS.VALUES_GET, cacheObject: true);
+}
+```
+
+In this example, the cache will be valid for 60 minutes.
 
 That's all there is to using the library.
 
