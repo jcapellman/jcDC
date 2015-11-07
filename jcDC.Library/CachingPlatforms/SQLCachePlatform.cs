@@ -5,10 +5,11 @@ using jcDC.Library.EFModel;
 using System.Linq;
 
 using Newtonsoft.Json;
+using System;
 
 namespace jcDC.Library.CachingPlatforms {
     public class SQLCachePlatform : BaseCachePlatform {
-        public override void AddToCache<T>(string key, T value) {
+        public override void AddToCache<T>(string key, T value, DateTime expiration) {
             using (var eFactory = new jcDCEFModel()) {
                 var isNew = true;
 
@@ -22,6 +23,7 @@ namespace jcDC.Library.CachingPlatforms {
                     isNew = false;
                 }
 
+                cacheItem.Expiration = expiration;
                 cacheItem.KeyValue = JsonConvert.SerializeObject(value);
 
                 if (isNew) {
@@ -44,7 +46,11 @@ namespace jcDC.Library.CachingPlatforms {
                     return null;
                 }
 
-                return JsonConvert.DeserializeObject<jcCACHEItem>(cacheItem.KeyValue);
+                var item = JsonConvert.DeserializeObject<jcCACHEItem>(cacheItem.KeyValue);
+
+                item.Expiration = cacheItem.Expiration;
+
+                return item;
             }
         }
 
@@ -53,6 +59,12 @@ namespace jcDC.Library.CachingPlatforms {
                 foreach (var item in dependencies) {
                     eFactory.Database.ExecuteSqlCommand($"DELETE FROM dbo.Cache WHERE [Key] = '{item}'");
                 }
+            }
+        }
+
+        public override void RemoveFromCache(string key) {
+            using (var eFactory = new jcDCEFModel()) {
+                eFactory.Database.ExecuteSqlCommand($"DELETE FROM dbo.Cache WHERE [Key] = '{key}'");
             }
         }
     }

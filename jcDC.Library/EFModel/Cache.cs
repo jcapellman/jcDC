@@ -1,7 +1,8 @@
 namespace jcDC.Library.EFModel {
+    using System;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-    
+
     [Table("Cache")]
     public partial class Cache {
         [Required]
@@ -11,5 +12,7 @@ namespace jcDC.Library.EFModel {
 
         [Required]
         public string KeyValue { get; set; }
+
+        public DateTime Expiration { get; set; }
     }
 }

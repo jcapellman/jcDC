@@ -12,8 +12,10 @@ namespace jcDC.Library.CachingPlatforms {
             _cache = MemoryCache.Default;
         }
 
-        public override void AddToCache<T>(string key, T value) {
+        public override void AddToCache<T>(string key, T value, DateTime expiration) {
             var cacheItem = new jcCACHEItem(value);
+
+            cacheItem.Expiration = expiration;
 
             var existingItem = _cache[key];
 
@@ -46,6 +48,10 @@ namespace jcDC.Library.CachingPlatforms {
             foreach (var item in dependencies) {
                 _cache.Remove(item);
             }
+        }
+
+        public override void RemoveFromCache(string key) {
+            _cache.Remove(key);
         }
     }
 }

@@ -10,6 +10,9 @@ namespace jcDC.Library.Objects {
         [DataMember]
         public dynamic ItemValue { get; set; }
 
+        [DataMember]
+        public DateTime Expiration { get; set; }
+
         public jcCACHEItem() { }
 
         public jcCACHEItem(dynamic value) {

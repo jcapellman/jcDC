@@ -13,12 +13,18 @@ namespace jcDC.Library {
     public class jcCACHEAttribute : System.Web.Http.Filters.ActionFilterAttribute {
         private string _key;
         private string[] _dependencies;
+        private int _expirationInMinutes;
 
-        public jcCACHEAttribute() { _key = null; _dependencies = null; }
+        public int ExpirationInMinutes {
+            get { return _expirationInMinutes; }
+        }
 
-        public jcCACHEAttribute(object key, string[] dependencies = null) {
+        public jcCACHEAttribute() { _key = null; _dependencies = null;  _expirationInMinutes = int.MaxValue; }
+
+        public jcCACHEAttribute(object key, string[] dependencies = null, int expirationInMinutes = int.MaxValue) {
             _key = key.ToString();
             _dependencies = dependencies;
+            _expirationInMinutes = expirationInMinutes;
         }
 
         private static BaseCachePlatform _currentCachePlatform;
@@ -75,6 +81,14 @@ namespace jcDC.Library {
             }
 
             var cacheItem = CurrentCachePlatform.GetFromCache(_key);
+
+            if (cacheItem != null && cacheItem.Expiration < DateTime.Now) {
+                CurrentCachePlatform.RemoveFromCache(_key);
+
+                base.OnActionExecuting(actionContext);
+
+                return;
+            }
 
             if (cacheItem != null) {
                 var response = new HttpResponseMessage();
