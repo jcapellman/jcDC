@@ -15,7 +15,7 @@ namespace jcDC.Tests.WebAPI.Controllers {
 
         public static List<int> val;
 
-        [jcCACHE(REQUESTS.VALUES_GET)]
+        [jcCACHE(REQUESTS.VALUES_GET, expirationInMinutes: 60)]
         public IEnumerable<int> Get() {
             return Return(val, REQUESTS.VALUES_GET, cacheObject: true);
         }
